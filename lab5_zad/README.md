@@ -64,6 +64,7 @@ NAME                         READY   STATUS    RESTARTS   AGE
 zero-test-645589f969-pjlkf   1/1     Running   0          7s
 
 #Opis
+
 W ramach zadania utworzyłem w Kubernetes dwa środowiska: ns-dev oraz ns-prod. 
 Następnie w ns-dev skonfigurowałem ograniczenia zasobów za pomocą ResourceQuota i LimitRange, a w ns-prod przydzieliłem dwukrotnie większe zasoby. 
 W ns-dev utworzyłem trzy deploymenty testowe: no-test, yes-test i zero-test. 
