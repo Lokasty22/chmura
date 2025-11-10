@@ -64,4 +64,10 @@ NAME                         READY   STATUS    RESTARTS   AGE
 zero-test-645589f969-pjlkf   1/1     Running   0          7s
 
 #Opis
-W ramach zadania utworzyłem w Kubernetes dwa środowiska: ns-dev oraz ns-prod. Następnie w ns-dev skonfigurowałem ograniczenia zasobów za pomocą ResourceQuota i LimitRange, a w ns-prod przydzieliłem dwukrotnie większe zasoby. W ns-dev utworzyłem trzy deploymenty testowe: no-test, yes-test i zero-test. Deployment no-test przekraczał limity zasobów i jego pod pozostał w stanie Pending. Deployment yes-test mieścił się w dopuszczalnych granicach i działał poprawnie (Running). Deployment zero-test nie miał zdefiniowanych limitów, ale dzięki LimitRange otrzymał wartości domyślne i również działał poprawnie (Running). Wyniki potwierdziły, że mechanizmy ResourceQuota i LimitRange skutecznie kontrolują przydział zasobów, zapewniając stabilność i izolację środowisk w Kubernetes.
+W ramach zadania utworzyłem w Kubernetes dwa środowiska: ns-dev oraz ns-prod. 
+Następnie w ns-dev skonfigurowałem ograniczenia zasobów za pomocą ResourceQuota i LimitRange, a w ns-prod przydzieliłem dwukrotnie większe zasoby. 
+W ns-dev utworzyłem trzy deploymenty testowe: no-test, yes-test i zero-test. 
+Deployment no-test przekraczał limity zasobów i jego pod pozostał w stanie Pending. 
+Deployment yes-test mieścił się w dopuszczalnych granicach i działał poprawnie (Running). 
+Deployment zero-test nie miał zdefiniowanych limitów, ale dzięki LimitRange otrzymał wartości domyślne i również działał poprawnie (Running). 
+Wyniki potwierdziły, że mechanizmy ResourceQuota i LimitRange skutecznie kontrolują przydział zasobów, zapewniając stabilność i izolację środowisk w Kubernetes.
