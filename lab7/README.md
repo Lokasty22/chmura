@@ -15,7 +15,7 @@ loko@loko-VirtualBox: kubectl get pods -n remote
 NAME        READY   STATUS    RESTARTS   AGE  
 remoteweb   1/1     Running   0          95s
   
-loko@loko-VirtualBox:$ kubectl create service nodeport remoteweb --tcp=80:80 --node-port=31999 -n remote
+loko@loko-VirtualBox:$ kubectl create service nodeport remoteweb --tcp=80:80 --node-port=31999 -n remote  
 service/remoteweb created  
 Sprawdzenie:  
 loko@loko-VirtualBox:~$ kubectl get svc -n remote   
@@ -65,7 +65,7 @@ remote file exists
 
 Odpowiedź remote file exists potwierdziła poprawną komunikację wewnątrz klastra.  
 
-6. Zweryfikuj, że ta strona internetowa jest dostępna na porcie węzła minikube 31999
+5. Zweryfikuj, że ta strona internetowa jest dostępna na porcie węzła minikube 31999
 
 Sprawdzenie dostępu z zewnątrz przez NodePort:  
    
