@@ -91,9 +91,16 @@ working. Further configuration is required.</p>
 <a href="http://nginx.org/">nginx.org</a>.<br/>  
 Commercial support is available at  
 <a href="http://nginx.com/">nginx.com</a>.</p>  
-
 <p><em>Thank you for using nginx.</em></p>  
 </body>  
 </html>  
+Wnioski:
 
+Pod uruchomiony w osobnej przestrzeni nazw może być udostępniony poza klaster dzięki usłudze typu NodePort.
+
+DNS Kubernetes poprawnie rozwiązuje adresy usług w formacie <service>.<namespace>.svc.cluster.local.
+
+Komunikacja między Pod-ami w różnych przestrzeniach nazw działa prawidłowo.
+
+Konfiguracja została wykonana poprawnie, a serwer nginx działał zgodnie z oczekiwaniami.
 
