@@ -1,0 +1,24 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backend
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: minikube-m03   #wezel B
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}
