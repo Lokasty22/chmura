@@ -1,4 +1,5 @@
 1. Należy utworzyć klaster z trzema węzłami roboczymi (węzeł główny + wezły A,B,C), pluginem CNI Calico oraz sterownikiem Docker.
+   
    loko@loko-VirtualBox:$ minikube start --driver=docker --cni=calico --nodes=4  
    Sprawdzenie czy wszystkie węzły sie utworzyły:   
 loko@loko-VirtualBox:$ kubectl get nodes -o wide  
@@ -8,7 +9,7 @@ minikube-m02   Ready    <none>          9m42s   v1.34.0   192.168.49.3   <none> 
 minikube-m03   Ready    <none>          8m29s   v1.34.0   192.168.49.4   <none>        Ubuntu 22.04.5 LTS   6.14.0-36-generic   docker://28.4.0  
 minikube-m04   Ready    <none>          6m40s   v1.34.0   192.168.49.5   <none>        Ubuntu 22.04.5 LTS   6.14.0-36-generic   docker://28.4.0
 
-2. W klastrze należy wdrożyć:  
+3. W klastrze należy wdrożyć:  
 • Deployment o nazwie frontend na bazie obrazu nginx oraz 3 replikach. Pod-y tego
 Deployment-u powinny znaleźć się na węźle A.
 • Deployment o nazwie backend na bazie obrazu nginx oraz 1 replice. Pod-y tego
@@ -103,6 +104,15 @@ Reading state information... Done
 curl is already the newest version (8.14.1-2+deb13u2).  
 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.  
 
+loko@loko-VirtualBox:~$  kubectl exec -it frontend-6849d6fc55-nxn9s -- curl -m 2 mysql-svc:3306  
+curl: (1) Received HTTP/0.9 when not allowed  
+
+
+loko@loko-VirtualBox:~$ kubectl exec -it backend-7799b98db-nvvwp -- curl -m 2 mysql-svc:3306   
+curl: (1) Received HTTP/0.9 when not allowed   
+
+ loko@loko-VirtualBox:~$ kubectl exec -it backend-7799b98db-nvvwp -- curl -m 2 mysql-svc:3307   
+curl: (28) Connection timed out after 2009 milliseconds   
 
 
 
