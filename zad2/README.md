@@ -1,4 +1,5 @@
 CZĘŚĆ OBOWIĄZKOWA  
+--Pliki konfiguracyjne znajdują się w folderze k8s.---  
 1.  
 W ramach zadania została zaimplementowana przykładowa aplikacja webowa w architekturze Full-Stack, uruchomiona i skonfigurowana w środowisku Kubernetes (klaster Minikube).
 Aplikacja została udostępniona z zewnątrz klastra przy użyciu mechanizmu Ingress, pod adresem: http://brilliantapp.zad
