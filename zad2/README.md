@@ -192,6 +192,20 @@ pozostały ruch (/) jest obsługiwany przez usługę frontend.
 Wdrożenie:  
 kubectl apply -f ingress.yaml  
 
+Weryfikacja działania wdrożenia:   
+Poprawność wdrożenia aplikacji w klastrze Minikube została zweryfikowana poprzez sprawdzenie stanu zasobów Kubernetes:    
+Usługi (Services) – usługi frontend, backend oraz mongo są poprawnie utworzone i dostępne wewnątrz klastra jako ClusterIP.  
+Pody (Pods) – wszystkie pody aplikacji znajdują się w stanie Running, bez błędów uruchomienia i nieoczekiwanych restartów.  
+Ingress – skonfigurowany Ingress poprawnie wystawia aplikację na zewnątrz klastra pod adresem http://brilliantapp.zad  
+
+<img width="503" height="87" alt="Screenshot from 2026-01-15 00-05-14" src="https://github.com/user-attachments/assets/98af7c5e-9081-4e83-a116-f16e8217494b" />    
+
+<img width="479" height="120" alt="Screenshot from 2026-01-15 00-07-52" src="https://github.com/user-attachments/assets/c3da62f8-ab07-4933-bedf-3d63e243e2ec" />    
+
+<img width="563" height="48" alt="image" src="https://github.com/user-attachments/assets/51bccccf-70cc-46cb-aa5c-5d069f700277" />     
+
+
+
 Test 1 – rejestracja użytkownika (Backend API)  
 Na poniższym screenie przedstawiono test poprawności działania backendu poprzez wysłanie żądania POST do endpointu rejestracji użytkownika:  
 POST http://brilliantapp.zad/api/users  
