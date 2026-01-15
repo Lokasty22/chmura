@@ -135,10 +135,10 @@ kubectl apply -f backend-config.yaml
 
 Deployment backendu:  
 Plik: backend-deployment.yaml    
-<img width="738" height="466" alt="image" src="https://github.com/user-attachments/assets/c13c4b2d-2ccf-4f4e-9650-869a1e11d083" />  
+<img width="687" height="387" alt="image" src="https://github.com/user-attachments/assets/e168f572-4b33-4381-83bb-b2a496e9fe45" />  
+
 
 Backend aplikacji został wdrożony w klastrze Kubernetes jako Deployment z dwoma replikami, co zwiększa dostępność usługi.  
-Zastosowano strategię RollingUpdate, która umożliwia aktualizację aplikacji bez przerywania jej działania.  
 Kontener backendu:  
 korzysta z obrazu zad2-backend:1.0  
 nasłuchuje na porcie 3000  
@@ -239,12 +239,87 @@ Zaprezentowano ekran logowania użytkownika, który umożliwia uwierzytelnienie 
 <img width="1209" height="729" alt="Screenshot from 2026-01-15 00-15-09" src="https://github.com/user-attachments/assets/d3009d7a-e459-491b-b407-a1456bd732d2" />  
 <img width="1209" height="729" alt="Screenshot from 2026-01-15 00-15-26" src="https://github.com/user-attachments/assets/edb4506f-110f-403a-9111-c5aca6cb3e1b" />  
 
+CZĘŚĆ NIEOBOWIĄZKOWA  
+
+Opis zmian w aplikacji widocznych po aktualizacji:   
+W ramach części nieobowiązkowej przeprowadzono aktualizację aplikacji backendowej bez przerywania jej działania dla użytkownika końcowego.  
+Zmiana polegała na:  
+wdrożeniu nowej wersji obrazu backendu (zad2-backend:1.1),  
+zachowaniu pełnej funkcjonalności aplikacji w trakcie aktualizacji,  
+ciągłej dostępności aplikacji pod adresem http://brilliantapp.zad.
+
+Poprawność aktualizacji była weryfikowana poprzez:  
+możliwość logowania i rejestracji użytkowników w trakcie aktualizacji,  
+wykonywanie zapytań HTTP do endpointów /api/users oraz /api/auth,  
+brak przerw w dostępie do interfejsu frontendowego.  
+
+Stworzenie nowej wersji obrazu backendu:  
+<img width="851" height="305" alt="image" src="https://github.com/user-attachments/assets/38d64525-9f09-4b87-81f2-1ebac304bda4" />  
+
+Zmiany w plikach konfiguracyjnych (Deployment backendu):  
+<img width="692" height="466" alt="image" src="https://github.com/user-attachments/assets/dabf0ae8-d5a1-444c-998a-cda8e780edd2" />  
+Aktualizacja została przeprowadzona przy użyciu mechanizmu RollingUpdate w Kubernetes.  
+W pliku backend-deployment.yaml zastosowano strategię:  
+strategy:  
+  type: RollingUpdate  
+  rollingUpdate:  
+    maxUnavailable: 0  
+    maxSurge: 1  
+    
+Oznacza to, że:  
+w trakcie aktualizacji zawsze dostępna jest co najmniej jedna instancja backendu,  
+nowy pod jest uruchamiany zanim stary zostanie usunięty,  
+użytkownik nie doświadcza przerwy w działaniu aplikacji.  
+Dodatkowo zmieniono wersję obrazu kontenera backendu:  
+image: zad2-backend:1.1  
+
+Zastosowanie zaktualizowanego pliku deploymentu:   
+<img width="474" height="37" alt="image" src="https://github.com/user-attachments/assets/010f049f-0ff4-4ed6-bbe1-5a9f90d51a7b" />  
+
+Obserwacja procesu aktualizacji:  
+<img width="520" height="130" alt="image" src="https://github.com/user-attachments/assets/5aa458ea-cb7e-44fd-adc0-bb09cd7f3455" />  
+Widoczne było równoległe działanie starych i nowych podów backendu.
+
+Testy poprawności po aktualizacji aplikacji:    
+<img width="1127" height="576" alt="image" src="https://github.com/user-attachments/assets/753c0dcb-b842-40b8-8ff4-73c9cb508ced" />  
+<img width="1204" height="707" alt="image" src="https://github.com/user-attachments/assets/bfdc7189-652a-4c42-aa69-310014b4f141" />  
+<img width="1199" height="729" alt="image" src="https://github.com/user-attachments/assets/4cc7fd54-1837-46d2-8ee8-968e970bee8f" />  
+Testy potwierdziły, że aktualizacja została przeprowadzona bez przerywania działania aplikacji oraz bez wpływu na dostępność funkcjonalności dla użytkownika końcowego.  
 
 
+Sonda:  
+W backendzie zaimplementowano endpoint /health, wykorzystywany przez sondę livenessProbe do weryfikacji poprawnego działania aplikacji.  
+Zastosowanie sondy w konfiguracji wdrożenia:  
+zastosowano sondę livenessProbe w konfiguracji backendu aplikacji, w celu zwiększenia niezawodności oraz odporności aplikacji na błędy w środowisku klastra Kubernetes (Minikube).  
 
+Sonda została zdefiniowana w pliku backend-deployment.yaml dla kontenera backendowego:  
+<img width="668" height="578" alt="image" src="https://github.com/user-attachments/assets/c3fa53b8-472b-4b94-8e1b-f7a4a66a9d6b" />  
+livenessProbe:  
+  httpGet:  
+    path: /health  
+    port: 3000  
+  initialDelaySeconds: 15  
+  periodSeconds: 10  
 
+Uzasadnienie doboru typu sondy:  
+Zastosowano sondę livenessProbe, której celem jest wykrywanie sytuacji, w których aplikacja przestaje działać poprawnie (np. zawieszenie procesu, błąd wewnętrzny aplikacji), mimo że kontener nadal jest uruchomiony.  
+W przypadku wykrycia nieprawidłowej odpowiedzi z endpointu /health, Kubernetes automatycznie restartuje kontener, co pozwala na samonaprawę aplikacji bez ingerencji administratora.  
+Zdecydowano się na użycie sondy livenessProbe, ponieważ:  
+aplikacja backendowa udostępnia dedykowany endpoint zdrowia (/health),  
+backend nie wymaga długiego czasu inicjalizacji,  
+celem było przetestowanie automatycznego restartu kontenera w przypadku awarii procesu aplikacji.  
 
+Sposób wykorzystania sondy:  
+Sonda wykonuje cykliczne zapytania HTTP (httpGet) do endpointu:  /health na porcie:3000  
+Jeżeli backend przestanie odpowiadać poprawnie, Kubernetes uzna kontener za niesprawny i uruchomi go ponownie.  
 
+Parametry sondy:  
+initialDelaySeconds: 15 – opóźnienie przed pierwszym sprawdzeniem, umożliwiające pełne uruchomienie aplikacji,  
+periodSeconds: 10 – częstotliwość wykonywania testów zdrowia aplikacji.  
+
+Test działania sondy:  
+<img width="546" height="277" alt="image" src="https://github.com/user-attachments/assets/529fc463-5e5c-42a8-8fbd-3c9d35135866" />  
+Test sondy livenessProbe został przeprowadzony poprzez ręczne zakończenie procesu aplikacji w jednym z podów backendu. Kubernetes wykrył niepoprawny stan aplikacji i automatycznie zrestartował wyłącznie wadliwy pod, co potwierdziło poprawne działanie sondy. Dzięki zastosowaniu dwóch replik backendu aplikacja pozostała dostępna przez cały czas trwania testu.
 
 
 
